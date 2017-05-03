@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>GOOGLE API Example</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <style>
-      /* Note: Try to remove the following lines to see the effect of CSS positioning */
-      .affix {
-          top: 0;
-          width: 100%;
-      }
 
-      .affix + .container-fluid {
-          padding-top: 70px;
-      }
-    </style>
-  </head>
-  <body>
+<head>
+  <title>GOOGLE API Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    /* Note: Try to remove the following lines to see the effect of CSS positioning */
+    .affix {
+      top: 0;
+      width: 100%;
+    }
+
+    .affix + .container-fluid {
+      padding-top: 70px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
     <div class="container-fluid" style="background-color:#80bfff;color:#fff;height:150px;">
-          <h1>GOOGLE API Example</h1>
-          <h3>Test to see the possibilities of integration with Google applications</h3>
+      <h1>GOOGLE API TEST</h1>
+      <h3>Test to see the possibilities of integration with Google applications</h3>
     </div>
-    <h3>CALENDAR</h3>
-    {% for calendar in calendars %}
-      <div class="card-header text-xs-center">
-        <h4>{{ calendar.summary }}</h4>
-      </div>
-      <div class="card-block text-muted">
-        <dl class="card-text">
+    <h3>CALENDAR</h3> {% for calendar in calendars %}
+    <div class="card-header text-xs-center">
+      <h4>{{ calendar.summary }}</h4>
+    </div>
+    <div class="card-block text-muted">
+      <dl class="card-text">
         <dt>UID</dt>
         <dd class="p-l-1">{{ calendar.id }}</dd>
         <dt>etag</dt>
@@ -40,8 +41,10 @@
         <dt>User Role</dt>
         <dd class="p-l-1">{{ calendar.accessRole }}</dd>
         <a class="btn btn-info" name="myButton" onclick="window.location='/mCalendar/{{ calendar.id }}';">GET EVENTLIST</a>
-        </dl>
-      </div>
+      </dl>
+    </div>
     {% endfor %}
-  </body>
+  </div>
+</body>
+
 </html>
