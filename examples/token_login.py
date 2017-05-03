@@ -75,6 +75,8 @@ def retrieve():
 
 @app.route("/menu", methods=["GET"])
 def menu():
+
+    session['user'] = google.get('https://www.googleapis.com/oauth2/v1/userinfo').json()
     """"""
     return """
     <h1>Congratulations, you have obtained an OAuth 2 token!</h1>
@@ -85,7 +87,7 @@ def menu():
         <li><a href="/manual_refresh"> Explicitly refresh the token</a></li>
         <li><a href="/validate"> Validate the token</a></li>
         <li><a href="/revoke"> Revoke the token</a></li>
-        <li><a href="/calendar"> Go to Calendar example</a></li>
+        <li><a href="/gmail"> Go to Gmail example</a></li>
     </ul>
 
     <pre>
@@ -130,21 +132,15 @@ def revoke():
         <h1>Fail to revoke token.</h1>"""
 
 @app.route("/profile", methods=["GET"])
-def profile():
-    """Fetching a protected resource using an OAuth 2 token."""
+def getProfile():
 
-    google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
+    return jsonify(session['user'])
 
-    return jsonify(google.get(app.config['GOOGLE_OAUTH_USER_INFO']).json())
+@app.route("/gmail", methods=["GET"])
+def getMail():
 
-@app.route("/calendar")
-def calendarList():
-    """ Obtain list of user calendars """
-    credentials = {
-        'CLIENT_ID': app.config['GOOGLE_CLIENT_ID']
-    }
-    eventlist = calendar.listCalendar(credentials).json()
-    return render_template('calendar.html', calendars = eventlist['items'])
+    mail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/threads?maxResults=14').json()
+    return render_template('email_panel.html', user = session['user'], gmail = mail['threads'])
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback
