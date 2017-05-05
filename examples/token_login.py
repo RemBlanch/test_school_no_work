@@ -4,9 +4,9 @@ from pprint import pformat
 import os
 import sys
 sys.path.append('../')
-#import google.google_authorization as google_auth
 from google.google_authorization import google_auth
 import google.calendar.calendar as calendar
+import mail
 from requests_oauthlib import OAuth2Session
 
 try:
@@ -77,7 +77,7 @@ def retrieve():
 def menu():
 
     session['user'] = google.get('https://www.googleapis.com/oauth2/v1/userinfo').json()
-    """"""
+
     return """
     <h1>Congratulations, you have obtained an OAuth 2 token!</h1>
     <h2>What would you like to do next?</h2>
@@ -140,7 +140,12 @@ def getProfile():
 def getMail():
 
     mail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/threads?maxResults=14').json()
-    return render_template('email_panel.html', user = session['user'], gmail = mail['threads'])
+    labels = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/labels').json()
+    return render_template('email_panel.html', user = session['user'], gmail = mail['threads'], labels = labels['labels'])
+
+@app.route('/mGmail/<myEmail>')
+def gMail(myEmail):
+    return mail.getMail(myEmail, app)
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback
