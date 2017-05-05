@@ -53,7 +53,8 @@ def getMailbyLabel(app, labelValue):
 
     google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
     ownlabels = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/labels').json()
-    listMail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages?q=label:' + labelValue + '&maxResults=14').json()
+    label = ownlabels['labelIds'][labelValue]
+    listMail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages?q=label:' + label + '&maxResults=14').json()
     return setMainMail(google, ownlabels, listMail)
 
 def getMail(myEmail, app):
