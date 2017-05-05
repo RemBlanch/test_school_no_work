@@ -138,14 +138,15 @@ def getProfile():
 
 @app.route("/gmail", methods=["GET"])
 def getMail():
-
-    mail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/threads?maxResults=14').json()
-    labels = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/labels').json()
-    return render_template('email_panel.html', user = session['user'], gmail = mail['threads'], labels = labels['labels'])
+    return mail.listMail(app)
 
 @app.route('/mGmail/<myEmail>')
 def gMail(myEmail):
     return mail.getMail(myEmail, app)
+
+@app.route('/gLabel/<labelID>')
+def gLabel(labelID):
+    return mail.getMailbyLabel(app, labelID)
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback

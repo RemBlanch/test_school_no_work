@@ -89,7 +89,7 @@
             <ul class="dropdown-menu">
               {% for label in labels %}
                 {% if label.type == "user" %}
-                  <li><a href="#">{{ label.name }}</a></li>
+                  <li><a href="/gLabel/{{ label.name }}">{{ label.name }}</a></li>
                 {% endif %}
               {% endfor %}
             </ul>
@@ -108,16 +108,25 @@
         <div class="container">
           <h2>Bandeja de entrada</h2>
           <hr>
-          {% if gmail %}
-              {% for mail in gmail %}
+          {% if emailList %}
+              {% for mail in emailList %}
                 <div class="panel panel-primary">
                   <div class="panel-heading clickable">
-                    <h3 class="panel-title"> {{ mail.id}} </h3>
+                    <h3 class="panel-title"> {{ mail.subject}}
+                      {% for mylabels in mail.labelID %}
+                        {% for label in labels %}
+                          {% if mylabels == label.id %}
+                            {% if label.type == "user" %}
+                                <span class="label label-success"> {{ label.name }} </span>
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      {% endfor %} </h3>
                     <span class="pull-right "><i class="glyphicon glyphicon-minus"></i></span>
                   </div>
                   <div class="panel-body">
-                    {{ mail.snippet }}
-                    <a class="btn btn-info" name="getButton" href="/mGmail/{{ mail.id }}" target="_blank">OPEN MAIL</a>
+                    {{ mail.snippet }} ...
+                    <a class="btn btn-info pull-right" name="getButton" href="/mGmail/{{ mail.id }}" target="_blank">OPEN MAIL</a>
                   </div>
               </div>
               {% endfor %}

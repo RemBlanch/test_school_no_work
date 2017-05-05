@@ -21,6 +21,41 @@ try:
 except ImportError:
     raise RuntimeError('Requirements not set up, see "Requirements":\n' + __doc__)
 
+
+def listMail(app):
+
+    google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
+    ownlabels = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/labels').json()
+    listMail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages?q=%22!in%3A+label%3Achats%22&maxResults=14').json()
+    return setMainMail(google, ownlabels, listMail)
+
+def setMainMail(google, ownlabels, listMail):
+
+    emailList = []
+    email = {}
+
+    for item in listMail['messages']:
+        email['id'] = item['id']
+        get_email = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages/' + item['id'] + '?fields=id,labelIds,payload/headers,snippet,threadId').json()
+        for header in get_email['payload']['headers']:
+            if header['name'] == 'Subject':
+                email['subject'] = header['value']
+        email['labelID'] = get_email['labelIds']
+        email['snippet'] = get_email['snippet']
+        emailList.append(email.copy())
+
+    return render_template('email_panel.html',
+        user = session['user'],
+        labels = ownlabels['labels'],
+        emailList = emailList)
+
+def getMailbyLabel(app, labelValue):
+
+    google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
+    ownlabels = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/labels').json()
+    listMail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages?q=label:' + labelValue + '&maxResults=14').json()
+    return setMainMail(google, ownlabels, listMail)
+
 def getMail(myEmail, app):
     google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
     message_data = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages/'+ myEmail + '/?format=raw').json()
