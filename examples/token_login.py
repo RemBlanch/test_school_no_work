@@ -140,7 +140,7 @@ def getProfile():
 def getMail():
     return mail.listMail(app)
 
-@app.route('/mGmail/<myEmail>')
+@app.route('/mGmail/<str:myEmail>/')
 def gMail(myEmail):
     return mail.getMail(myEmail, app)
 
