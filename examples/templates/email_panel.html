@@ -76,6 +76,9 @@
     <div class="row content">
       <div class="col-sm-3 sidenav">
         <h4>{{ user.name }} email</h4>
+        <p/>
+            <a class="btn btn-danger" href="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1" role="button" target="_blank">Redactar correo</a>
+        <p/>
         <ul class="nav nav-pills nav-stacked">
           <li class="active"><a href="#section1">Home</a></li>
           <li><a href="#section2">Recibidos</a></li>
@@ -89,7 +92,7 @@
             <ul class="dropdown-menu">
               {% for label in labels %}
                 {% if label.type == "user" %}
-                  <li><a href="/gLabel/{{ label.id }}">{{ label.name }}</a></li>
+                  <li><a href="/gLabel/{{ label.name }}">{{ label.name }}</a></li>
                 {% endif %}
               {% endfor %}
             </ul>
@@ -117,18 +120,21 @@
                         {% for label in labels %}
                           {% if mylabels == label.id %}
                             {% if label.type == "user" %}
-                                <span class="label label-success"> {{ label.name }} </span>
+                                <span class="label label-success">{{ label.name }}</span>
                             {% endif %}
                           {% endif %}
                         {% endfor %}
                       {% endfor %} </h3>
-                    <span class="pull-right "><i class="glyphicon glyphicon-minus"></i></span>
+                    <span class="pull-right ">
+                      <i class="glyphicon glyphicon-minus"></i>
+                    </span>
                   </div>
                   <div class="panel-body">
                     {{ mail.snippet }} ...
-                    <a class="btn btn-info pull-right" name="getButton" href="/mGmail/{{ mail.id }}" target="_blank">OPEN MAIL</a>
+                    <!--   <a class="btn btn-success pull-right" name="getButton" href="/mGmail/{{ mail.id }}" target="_blank">OPEN MAIL</a>  -->
+                    <a class="btn btn-link pull-right" name="getButton" href="https://mail.google.com/mail/u/0/#inbox/{{ mail.id }}" target="_blank">OPEN MAIL</a>
                   </div>
-              </div>
+                </div>
               {% endfor %}
           {% else %}
               <div class="card-header text-xs-center">
@@ -137,6 +143,10 @@
           {% endif %}
         </div>
       </div>
+      <ul class="pager">
+       <li><a href="#">Previous</a></li>
+       <li><a href="#">Next</a></li>
+    </ul>
     </div>
   <footer class="container-fluid">
     <p>Numintec test</p>

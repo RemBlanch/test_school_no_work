@@ -53,8 +53,7 @@ def getMailbyLabel(app, labelValue):
 
     google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
     ownlabels = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/labels').json()
-    label = ownlabels['labelIds'][labelValue]
-    listMail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages?q=label:' + label + '&maxResults=14').json()
+    listMail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages?q=label:' + labelValue + '&maxResults=14').json()
     return setMainMail(google, ownlabels, listMail)
 
 def getMail(myEmail, app):
@@ -109,3 +108,9 @@ def getMail(myEmail, app):
     html = str(soup)
 
     return render_template('email.html', headers=header, raw_data=html.decode('UTF-8'), txt_data=txt.decode('UTF-8'))
+
+def listDraft(app):
+    google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
+    ownlabels = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/labels').json()
+    listMail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/drafts?q=%22!in%3A+label%3Achats%22&maxResults=14').json()
+    return setMainMail(google, ownlabels, listMail)
