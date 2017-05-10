@@ -92,7 +92,7 @@
             <ul class="dropdown-menu">
               {% for label in labels %}
                 {% if label.type == "user" %}
-                  <li><a href="/gLabel/{{ label.name }}">{{ label.name }}</a></li>
+                  <li><a href="/gLabel/{{ label.name }}" value="{{ label.name }}">{{ label.name }}</a></li>
                 {% endif %}
               {% endfor %}
             </ul>
@@ -131,8 +131,8 @@
                   </div>
                   <div class="panel-body">
                     {{ mail.snippet }} ...
-                    <!--   <a class="btn btn-success pull-right" name="getButton" href="/mGmail/{{ mail.id }}" target="_blank">OPEN MAIL</a>  -->
-                    <a class="btn btn-link pull-right" name="getButton" href="https://mail.google.com/mail/u/0/#inbox/{{ mail.id }}" target="_blank">OPEN MAIL</a>
+                    <a class="btn btn-success pull-right" name="getButton" href="/mGmail/{{ mail.id }}" target="_blank">OPEN MAIL</a>
+                    <!--   <a class="btn btn-link pull-right" name="getButton" href="https://mail.google.com/mail/u/0/#inbox/{{ mail.id }}" target="_blank">OPEN MAIL</a>  -->
                   </div>
                 </div>
               {% endfor %}

@@ -5,6 +5,9 @@ import email
 from bs4 import BeautifulSoup
 import os
 from requests_oauthlib import OAuth2Session
+import sys
+sys.path.append('../')
+import google.gmail.messages as messages
 
 try:
     from flask import (
@@ -26,7 +29,12 @@ def listMail(app):
 
     google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
     ownlabels = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/labels').json()
-    listMail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages?q=%22!in%3A+label%3Achats%22&maxResults=14').json()
+    params = {
+        "q": "!label: chat",
+        "maxResults": 14
+    }
+    listMail = messages.listMessage(session['user']['id'], google, params).json()
+    print listMail
     return setMainMail(google, ownlabels, listMail)
 
 def setMainMail(google, ownlabels, listMail):
@@ -58,8 +66,9 @@ def getMailbyLabel(app, labelValue):
 
 def getMail(myEmail, app):
     google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
-    message_data = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages/'+ myEmail + '/?format=raw').json()
-
+    #message_data = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages/'+ myEmail + '/?format=raw').json()
+    raw = { "format": "raw"}
+    message_data = messages.getMessage(session['user']['id'], myEmail, google, raw).json()
     msg_str = base64.urlsafe_b64decode(message_data['raw'].encode('ASCII'))
     msg = email.message_from_string(msg_str)
 

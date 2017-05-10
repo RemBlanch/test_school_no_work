@@ -68,7 +68,6 @@ def demo():
 
 @app.route("/callback", methods=["GET"])
 def retrieve():
-
     url_to_redirect = url_for('retrieve', _external=True)
     session['oauth_token'] = google_auth().retrieve_token(app.config['GOOGLE_CLIENT_SECRET'], google)
     return redirect(url_for('.menu'))
@@ -97,7 +96,6 @@ def menu():
 
 @app.route("/automatic_refresh", methods=["GET"])
 def refresh():
-
     credentials = {
         'CLIENT_ID': app.config['GOOGLE_CLIENT_ID'],
         'CLIENT_SECRET': app.config['GOOGLE_CLIENT_SECRET']
@@ -107,7 +105,6 @@ def refresh():
 
 @app.route("/manual_refresh", methods=["GET"])
 def manual_refresh():
-
     credentials = {
         'CLIENT_ID': app.config['GOOGLE_CLIENT_ID'],
         'CLIENT_SECRET': app.config['GOOGLE_CLIENT_SECRET']
@@ -117,13 +114,11 @@ def manual_refresh():
 
 @app.route("/validate", methods=["GET"])
 def validate():
-
     response = google_auth().token_validate()
     return jsonify(response)
 
 @app.route("/revoke", methods=["GET"])
 def revoke():
-
     response = google_auth().token_revoke()
     if response:
         return demo()
@@ -133,14 +128,13 @@ def revoke():
 
 @app.route("/profile", methods=["GET"])
 def getProfile():
-
     return jsonify(session['user'])
 
 @app.route("/gmail", methods=["GET"])
 def getMail():
     return mail.listMail(app)
 
-@app.route('/mGmail/<str:myEmail>/')
+@app.route('/mGmail/<myEmail>')
 def gMail(myEmail):
     return mail.getMail(myEmail, app)
 
@@ -150,6 +144,5 @@ def gLabel(labelID):
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback
-
     app.secret_key = os.urandom(24)
     app.run(debug=True)

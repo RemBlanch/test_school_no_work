@@ -14,20 +14,56 @@
             the environment.
 """
 
-def delete():
+from google.globalParameters import mail_URL
+
+def deleteMessage(userID, mailID, google, filter = None):
+
+    response = google.delete(
+        mail_URL['ACTION_URL'] + userID + mail_URL['MESSAGES'] + '/%s' % mailID,
+        params = args
+    )
+    return response
+
+"""
+    Gets the specified message.
+        userID --> User profile ID.
+        mailID --> Email ID.
+        google --> OAuth2Session.
+        filter --> Dictionary with query filters.
+"""
+def getMessage(userID, mailID, google, filter = None):
+
+    response = google.get(
+        mail_URL['ACTION_URL'] + userID + mail_URL['MESSAGES'] + '/%s' % mailID,
+        params = filter
+    )
+    return response
+
+def insertMessage():
     return NotImplemented
 
-def get():
-    return NotImplemented
+"""
+    Lists the messages in the user's mailbox.
+        userID --> User profile ID.
+        google --> OAuth2Session.
+        filter --> Dictionary with query filters.
 
-def insert():
-    return NotImplemented
+"""
+def listMessage(userID, google, filter = None):
 
-def list():
-    return NotImplemented
+    response = google.get(
+        mail_URL['ACTION_URL']  + userID + mail_URL['MESSAGES'],
+        params = filter
+    )
+    return response
 
-def modify():
-    return NotImplemented
+def modifyMessage(userID, mailID, filter = None):
+
+    response = google.post(
+        mail_URL['ACTION_URL']  + userID + mail_URL['MESSAGES'] + '/{0}'.format(mailID) + mail_URL['MODIFY'],
+        params = filter
+    )
+    return response
 
 def email_import():
     return NotImplemented
