@@ -32,3 +32,9 @@ mail_URL = {
     'MODIFY': '/modify',
     'SEND': '/send'
 }
+
+draft_URL = {
+    'ACTION_URL': 'https://www.googleapis.com/upload/gmail/v1/users/',
+    'DRAFTS': '/drafts',
+    'SEND': '/send'
+}

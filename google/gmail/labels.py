@@ -34,7 +34,6 @@ def deleteLabel(userID, labelID, google):
         thread_URL['ACTION_URL'] + userID + thread_URL['LABELS'] + '/%s' % labelID,
         params = extra
     )
-
     return response
 
 """
@@ -45,10 +44,8 @@ def deleteLabel(userID, labelID, google):
 def listLabel(userID, google):
 
     response = google.get(
-        thread_URL['ACTION_URL']  + userID + thread_URL['LABELS'],
-        params = extra
+        thread_URL['ACTION_URL']  + userID + thread_URL['LABELS']
     )
-
     return response
 
 """
@@ -64,7 +61,6 @@ def updateLabel(userID, labelID, google, extra):
         thread_URL['ACTION_URL']  + userID + thread_URL['LABELS'] + '/%s' % labelID,
         params = extra
     )
-
     return response
 
 """
@@ -80,7 +76,6 @@ def getLabel(userID, labelID, google, extra):
         thread_URL['ACTION_URL'] + userID + thread_URL['LABELS'] + '/%s' % labelID,
         params = extra
     )
-
     return response
 
 """
@@ -93,8 +88,7 @@ def getLabel(userID, labelID, google, extra):
 def patchLabel(userID, labelID, google, extra):
 
     response = google.patch(
-        thread_URL['ACTION_URL']  + userID + thread_URL['LABELS'] + '/%s' % labelID,
+        thread_URL['ACTION_URL'] + userID + thread_URL['LABELS'] + '/%s' % labelID,
         params = extra
     )
-
     return response

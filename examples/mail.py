@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 import base64
 import email
-from bs4 import BeautifulSoup
 import os
-from requests_oauthlib import OAuth2Session
 import sys
 sys.path.append('../')
+from requests_oauthlib import OAuth2Session
 import google.gmail.messages as messages
+import google.gmail.labels as labels
+from bs4 import BeautifulSoup
 
 try:
     from flask import (
@@ -28,13 +29,12 @@ except ImportError:
 def listMail(app):
 
     google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
-    ownlabels = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/labels').json()
+    ownlabels = labels.listLabel(session['user']['id'], google).json()
     params = {
         "q": "!label: chat",
         "maxResults": 14
     }
     listMail = messages.listMessage(session['user']['id'], google, params).json()
-    print listMail
     return setMainMail(google, ownlabels, listMail)
 
 def setMainMail(google, ownlabels, listMail):
@@ -44,7 +44,10 @@ def setMainMail(google, ownlabels, listMail):
 
     for item in listMail['messages']:
         email['id'] = item['id']
-        get_email = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages/' + item['id'] + '?fields=id,labelIds,payload/headers,snippet,threadId').json()
+        params = {
+            "fields": "id,labelIds,payload/headers,snippet,threadId"
+        }
+        get_email = messages.getMessage(session['user']['id'], item['id'], google, params).json()
         for header in get_email['payload']['headers']:
             if header['name'] == 'Subject':
                 email['subject'] = header['value']
@@ -60,13 +63,16 @@ def setMainMail(google, ownlabels, listMail):
 def getMailbyLabel(app, labelValue):
 
     google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
-    ownlabels = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/labels').json()
-    listMail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages?q=label:' + labelValue + '&maxResults=14').json()
+    ownlabels = labels.listLabel(session['user']['id'], google).json()
+    params = {
+        "q": "label: %s" % labelValue,
+        "maxResults": 14
+    }
+    listMail = messages.listMessage(session['user']['id'], google, params).json()
     return setMainMail(google, ownlabels, listMail)
 
 def getMail(myEmail, app):
     google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
-    #message_data = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/messages/'+ myEmail + '/?format=raw').json()
     raw = { "format": "raw"}
     message_data = messages.getMessage(session['user']['id'], myEmail, google, raw).json()
     msg_str = base64.urlsafe_b64decode(message_data['raw'].encode('ASCII'))
@@ -112,14 +118,17 @@ def getMail(myEmail, app):
 
     soup = BeautifulSoup(html)
     for image in soup.findAll('img'):
-        if image['src'].startswith("cid:"):
-            image['src'] = img['<' + image['src'][4:] + '>']
+        try:
+            if image['src'] and image['src'].startswith("cid:"):
+                image['src'] = img['<' + image['src'][4:] + '>']
+        except KeyError:
+            print "KEY ERROR"
     html = str(soup)
 
     return render_template('email.html', headers=header, raw_data=html.decode('UTF-8'), txt_data=txt.decode('UTF-8'))
 
 def listDraft(app):
     google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
-    ownlabels = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/labels').json()
+    ownlabels = labels.listLabel(session['user']['id'], google).json()
     listMail = google.get('https://www.googleapis.com/gmail/v1/users/' +  session['user']['id'] + '/drafts?q=%22!in%3A+label%3Achats%22&maxResults=14').json()
     return setMainMail(google, ownlabels, listMail)

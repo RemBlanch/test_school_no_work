@@ -7,55 +7,49 @@
 
 from google.globalParameters import thread_URL
 
-def getThread(google, userID, threadID, extra):
+def getThread(userID, threadID, google, extra):
 
     response = google.get(
-        thread_URL['ACTION_URL']  + '/%s' + thread_URL['THREADS'] + '/%s' % userID, threadID
-        params = extra
-    )
-
-    return response
-
-def listThread(google, userID, extra):
-
-    response = google.get(
-        thread_URL['ACTION_URL']  + '/%s' + thread_URL['THREADS'] % userID
+        thread_URL['ACTION_URL']  + userID + thread_URL['THREADS'] + '/%s' % threadID,
         params = extra
     )
     return response
 
-def modifyThread(google, userID, threadID, extra):
+def listThread(userID, google, extra):
 
+    response = google.get(
+        thread_URL['ACTION_URL'] + userID + thread_URL['THREADS'],
+        params = extra
+    )
+    return response
+
+def modifyThread(userID, threadID, google, extra):
     response = google.post(
-        thread_URL['ACTION_URL']  + '/%s' + thread_URL['THREADS'] + '/%s'  + '/modify' % userID, threadID
+        thread_URL['ACTION_URL'] + userID + thread_URL['THREADS'] + '/{0}'.param(threadID)  + '/modify',
         params = extra
     )
-
     return response
 
-def deleteThread(google, userID, threadID, extra):
+def deleteThread(userID, threadID, google, extra):
 
     response = google.delete(
-        thread_URL['ACTION_URL']  + '/%s' + thread_URL['THREADS'] + '/%s' % userID, threadID
+        thread_URL['ACTION_URL']  + userID + thread_URL['THREADS'] + '/%s' % threadID,
         params = extra
     )
-
     return response
 
 def trashThread(google, userID, threadID, extra):
 
     response = google.post(
-        thread_URL['ACTION_URL']  + '/%s' + thread_URL['THREADS'] + '/%s'  + '/trash' % userID, threadID
+        thread_URL['ACTION_URL'] + userID + thread_URL['THREADS'] + '/{0}'.param(threadID) + '/trash',
         params = extra
     )
-
     return response
 
 def untrashThread(google, userID, threadID, extra):
 
     response = google.post(
-        thread_URL['ACTION_URL']  + '/%s' + thread_URL['THREADS'] + '/%s'  + '/untrash' % userID, threadID
+        thread_URL['ACTION_URL'] + userID + thread_URL['THREADS'] + '/{0}'.param(threadID) + '/untrash',
         params = extra
     )
-
     return response
