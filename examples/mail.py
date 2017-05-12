@@ -26,14 +26,17 @@ except ImportError:
     raise RuntimeError('Requirements not set up, see "Requirements":\n' + __doc__)
 
 
-def listMail(app):
+def listMail(app, Newparams = None):
 
     google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
     ownlabels = labels.listLabel(session['user']['id'], google).json()
-    params = {
-        "q": "!label: chat",
-        "maxResults": 14
-    }
+    if Newparams == None:
+        params = {
+            "q": "!label: chat",
+            "maxResults": 14
+        }
+    else:
+        params = Newparams
     listMail = messages.listMessage(session['user']['id'], google, params).json()
     return setMainMail(google, ownlabels, listMail)
 

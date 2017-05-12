@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from pprint import pformat
 import os
 import sys
+import json
+import grequests
 sys.path.append('../')
-from google.google_authorization import google_auth
-import google.calendar.calendar as calendar
-import mail
+from pprint import pformat
+import google.gmail.messages as messages
 from requests_oauthlib import OAuth2Session
+from google.google_authorization import google_auth
 
 try:
     from flask import (
@@ -74,113 +75,67 @@ def retrieve():
 
 @app.route("/menu", methods=["GET"])
 def menu():
-
     session['user'] = google.get('https://www.googleapis.com/oauth2/v1/userinfo').json()
-
     return """
     <h1>Congratulations, you have obtained an OAuth 2 token!</h1>
     <h2>What would you like to do next?</h2>
     <ul>
         <li><a href="/profile"> Get account profile</a></li>
-        <li><a href="/automatic_refresh"> Implicitly refresh the token</a></li>
-        <li><a href="/manual_refresh"> Explicitly refresh the token</a></li>
-        <li><a href="/validate"> Validate the token</a></li>
-        <li><a href="/revoke"> Revoke the token</a></li>
+        <li><a href="/emailprofile"> Get gmail profile </a></li>
         <li><a href="/gmail"> Go to Gmail example</a></li>
-    </ul>
-
+        </ul>
     <pre>
     """ + pformat(session['oauth_token'], indent=4) + """
     </pre>
     """
 
-@app.route("/automatic_refresh", methods=["GET"])
-def refresh():
-    credentials = {
-        'CLIENT_ID': app.config['GOOGLE_CLIENT_ID'],
-        'CLIENT_SECRET': app.config['GOOGLE_CLIENT_SECRET']
-    }
-    google_auth().automatic_refresh_token(credentials)
-    return jsonify(session['oauth_token'])
-
-@app.route("/manual_refresh", methods=["GET"])
-def manual_refresh():
-    credentials = {
-        'CLIENT_ID': app.config['GOOGLE_CLIENT_ID'],
-        'CLIENT_SECRET': app.config['GOOGLE_CLIENT_SECRET']
-    }
-    google_auth().manual_refresh(credentials)
-    return jsonify(session['oauth_token'])
-
-@app.route("/validate", methods=["GET"])
-def validate():
-    response = google_auth().token_validate()
-    return jsonify(response)
-
-@app.route("/revoke", methods=["GET"])
-def revoke():
-    response = google_auth().token_revoke()
-    if response:
-        return demo()
-    else:
-        return """
-        <h1>Fail to revoke token.</h1>"""
-
-@app.route("/profile", methods=["GET"])
-def getProfile():
-    return jsonify(session['user'])
-
 @app.route("/gmail", methods=["GET"])
 def getMail():
-    return mail.listMail(app)
-
-@app.route("/getStarred")
-def starredMail():
     params = {
-        "labelIds": "STARRED",
         "q": "!label: chat",
-        "maxResults": 14
+        "maxResults": 30
     }
-    print params
-    return mail.listMail(app, params)
+    listMail = messages.listMessage(session['user']['id'], google, params).json()
 
-@app.route("/getDraft")
-def draftMail():
+    emailList = []
+    test = []
+    email = {}
     params = {
-        "labelIds": "DRAFT",
-        "q": "!label: chat",
-        "maxResults": 14
+        "fields": "id,labelIds,payload/headers,snippet,threadId",
     }
-    print params
-    return mail.listMail(app, params)
+    for item in listMail['messages']:
+        emailList.append('https://www.googleapis.com/gmail/v1/users/' + session['user']['id'] + '/messages/' + item['id'])
+    to_fetch = (grequests.get(url, params=params, session=google) for url in emailList)
+    response = []
+    for mail in grequests.map(to_fetch):
+        get_email = mail.json()
+        for header in get_email['payload']['headers']:
+            if header['name'] == 'Subject':
+                email['subject'] = header['value']
+        email['labelID'] = get_email['labelIds']
+        email['snippet'] = get_email['snippet']
+        test.append(email.copy())
+    #return json.dumps(test)
+    return render_template('email_panel.html', user = session['user'], emailList = test)
 
-@app.route("/getSpam")
-def spamMail():
-    params = {
-        "labelIds": "SPAM",
-        "q": "!label: chat",
-        "maxResults": 14
-    }
-    print params
-    return mail.listMail(app, params)
+@app.route("/emailprofile", methods=["GET"])
+def getGmailProfile():
+    response = google.get('https://www.googleapis.com/gmail/v1/users/' + session['user']['id'] + '/profile').json()
+    session['last_check'] = response['historyId']
+    return jsonify(response)
 
-@app.route("/getTrash")
-def trashMail():
-    params = {
-        "labelIds": "TRASH",
-        "q": "!label: chat",
-        "maxResults": 14
-    }
-    print params
-    return mail.listMail(app, params)
-
-@app.route('/mGmail/<myEmail>')
-def gMail(myEmail):
-    return mail.getMail(myEmail, app)
-
-@app.route('/gLabel/<labelID>')
-def gLabel(labelID):
-    return mail.getMailbyLabel(app, labelID)
+@app.route("/refresh")
+def refreshGmail():
+    params = {"startHistoryId": session['last_check']}
+    response = google.get(
+        'https://www.googleapis.com/gmail/v1/users/' + session['user']['id'] + '/history',
+        params = params
+    ).json()
+    session['last_check'] = response['historyId']
+    if 'messages' in response:
+        return getMail()
+    print "Nothing to Update"
+    return getMail()
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback

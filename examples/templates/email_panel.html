@@ -80,12 +80,13 @@
             <a class="btn btn-danger" href="https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1" role="button" target="_blank">Redactar correo</a>
         <p/>
         <ul class="nav nav-pills nav-stacked">
-          <li class="active"><a href="#section1">Home</a></li>
-          <li><a href="#section2">Recibidos</a></li>
-          <li><a href="#section3">Drafts</a></li>
-          <li><a href="#section3">Spam</a></li>
-          <li><a href="#section3">Trash</a></li>
+          <li class="active"><a href="/gmail">Home</a></li>
+          <li><a href="/getStarred">Destacados</a></li>
+          <li><a href="/getDraft">Drafts</a></li>
+          <li><a href="/getSpam">Spam</a></li>
+          <li><a href="/getTrash">Trash</a></li>
         </ul><br>
+        {% if labels %}
           <div class="dropdown">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Etiquetas
             <span class="caret"></span></button>
@@ -97,6 +98,7 @@
               {% endfor %}
             </ul>
           </div>
+        {% endif %}
         <hr>
         <div class="input-group">
           <input type="text" class="form-control" placeholder="Search ..">
@@ -109,7 +111,8 @@
       </div>
       <div class="col-sm-9">
         <div class="container">
-          <h2>Bandeja de entrada</h2>
+          <h2>Bandeja de entrada
+          <a class="btn btn-warning pull-right" name="getButton" href="/refresh">Refresh</a></h2>
           <hr>
           {% if emailList %}
               {% for mail in emailList %}
