@@ -93,7 +93,7 @@ def menu():
 def getMail():
     params = {
         "q": "!label: chat",
-        "maxResults": 30
+        "maxResults": 14
     }
     listMail = messages.listMessage(session['user']['id'], google, params).json()
 
@@ -134,8 +134,9 @@ def refreshGmail():
     session['last_check'] = response['historyId']
     if 'messages' in response:
         return getMail()
-    print "Nothing to Update"
-    return getMail()
+    else:
+        print "Nothing to Update"
+        return getMail()
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback

@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import base64
-import email
 import os
 import sys
+import email
+import base64
 sys.path.append('../')
-from requests_oauthlib import OAuth2Session
-import google.gmail.messages as messages
-import google.gmail.labels as labels
 from bs4 import BeautifulSoup
-
+import google.gmail.labels as labels
+import google.gmail.messages as messages
+from requests_oauthlib import OAuth2Session
 try:
     from flask import (
       Flask,
@@ -83,10 +82,10 @@ def getMail(myEmail, app):
 
     # MESSAGE HEADER
     header = {
-        'FROM' : msg['From'],
-        'TO': msg['To'],
-        'CC': msg['Cc'],
-        'SUBJECT': msg['Subject'],
+        'From' : msg['From'],
+        'To': msg['To'],
+        'Cc': msg['Cc'],
+        'Subject': msg['Subject'],
         'Date': str(msg['Date']),
     }
 

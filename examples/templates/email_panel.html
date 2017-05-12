@@ -135,7 +135,8 @@
                   <div class="panel-body">
                     {{ mail.snippet }} ...
                     <a class="btn btn-success pull-right" name="getButton" href="/mGmail/{{ mail.id }}" target="_blank">OPEN MAIL</a>
-                    <!--   <a class="btn btn-link pull-right" name="getButton" href="https://mail.google.com/mail/u/0/#inbox/{{ mail.id }}" target="_blank">OPEN MAIL</a>  -->
+                    <!--<a class="btn btn-link pull-right" name="getButton" href="https://mail.google.com/mail/u/0/#inbox/{{ mail.id }}" target="_blank">OPEN MAIL</a> -->
+                    <a class="btn btn-info pull-right" name="getButton" href="https://mail.google.com/mail/u/0/#inbox?compose={{ mail.id }}" target="_blank">REPLY MAIL</a>
                   </div>
                 </div>
               {% endfor %}

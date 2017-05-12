@@ -141,7 +141,6 @@ def starredMail():
         "q": "!label: chat",
         "maxResults": 14
     }
-    print params
     return mail.listMail(app, params)
 
 @app.route("/getDraft")
@@ -151,7 +150,6 @@ def draftMail():
         "q": "!label: chat",
         "maxResults": 14
     }
-    print params
     return mail.listMail(app, params)
 
 @app.route("/getSpam")
@@ -161,7 +159,6 @@ def spamMail():
         "q": "!label: chat",
         "maxResults": 14
     }
-    print params
     return mail.listMail(app, params)
 
 @app.route("/getTrash")
@@ -171,7 +168,6 @@ def trashMail():
         "q": "!label: chat",
         "maxResults": 14
     }
-    print params
     return mail.listMail(app, params)
 
 @app.route('/mGmail/<myEmail>')
