@@ -1,32 +1,43 @@
 <!DOCTYPE html>
 <html>
-    <body>
-        <table>
-            <tr>
-                <td>From:</td>
-                <td>{{ headers.FROM }}</td>
-            </tr>
-            <tr>
-                <td>To:</td>
-                <td>{{ headers.TO }}</td>
-            </tr>
-            <tr>
-                <td>CC:</td>
-                <td>{{ headers.CC }}</td>
-            </tr
-            <tr>
-                <td>Date:</td>
-                <td>{{ headers.Date }}</td>
-            </tr>
-            <tr>
-                <td>Subject: </td>
-                <td>{{ headers.SUBJECT }}</td>
-            </tr>
-        </table>
-        <p></p>
-            {{ raw_data|safe }}
-            {% if not raw_data %}
-                <p>{{ txt_data|safe }}<p>
-            {% endif%}
-    </body>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</style>
+<head>
+    <table>
+        <tr>
+            <td>From:</td>
+            <td>{{ headers.From }}</td>
+        </tr>
+        <tr>
+            <td>To:</td>
+            <td>{{ headers.To }}</td>
+        </tr>
+        <tr>
+            <td>CC:</td>
+            <td>{{ headers.Cc }}</td>
+        </tr
+        <tr>
+            <td>Date:</td>
+            <td>{{ headers.Date }}</td>
+        </tr>
+        <tr>
+            <td>Subject: </td>
+            <td>{{ headers.Subject }}</td>
+        </tr>
+        <tr>
+          <td>Attachments: </td>
+          <a href="/images/myw3schoolsimage.jpg" download>
+            <span class="glyphicons glyphicon glyphicon-save"></span>
+          </a>
+        </tr>
+    </table>
+    <p></p>
+        {{ raw_data|safe }}
+        {% if not raw_data %}
+            <p>{{ txt_data|safe }}<p>
+        {% endif%}
+</body>
 </html>

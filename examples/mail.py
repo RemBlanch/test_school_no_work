@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 import google.gmail.labels as labels
 import google.gmail.messages as messages
 from requests_oauthlib import OAuth2Session
+
 try:
     from flask import (
       Flask,
@@ -74,6 +75,7 @@ def getMailbyLabel(app, labelValue):
     return setMainMail(google, ownlabels, listMail)
 
 def getMail(myEmail, app):
+
     google = OAuth2Session(app.config['GOOGLE_CLIENT_ID'], token=session['oauth_token'])
     raw = { "format": "raw"}
     message_data = messages.getMessage(session['user']['id'], myEmail, google, raw).json()
