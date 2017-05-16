@@ -110,16 +110,11 @@ def updateCalendar(credentials, calendarID, calendar_type, **extra):
 
 ################################# CALENDARLIST #################################
 
-def listCalendar(credentials, **extra):
+def listCalendar(google, params=None):
     """ Obtain user's calendar list. """
-    google = OAuth2Session(
-        credentials['CLIENT_ID'],
-        token = session['oauth_token']
-    )
-
     response = google.get(
         calendar_URL['ACTION_URL'] + calendar_URL['CALENDAR_LIST'],
-        params = extra
+        params = params
     )
 
     return response

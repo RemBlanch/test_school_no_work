@@ -38,3 +38,8 @@ draft_URL = {
     'DRAFTS': '/drafts',
     'SEND': '/send'
 }
+
+calendar_URL = {
+    'ACTION_URL': 'https://www.googleapis.com/calendar/v3/calendars/',
+    'CALENDAR_EVENTS': '/events'
+}

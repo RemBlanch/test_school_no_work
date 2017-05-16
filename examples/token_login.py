@@ -134,7 +134,7 @@ def getProfile():
 
 @app.route("/gmail", methods=["GET"])
 def getMail():
-    return mail.listMail(app)
+    return mail.listMail(session['user']['id'])
 
 @app.route("/getStarred")
 def starredMail():
@@ -179,6 +179,12 @@ def gMail(myEmail):
 @app.route('/gLabel/<labelID>')
 def gLabel(labelID):
     return mail.getMailbyLabel(app, labelID)
+
+@app.route('/calendar')
+def getCalendar():
+    response = calendar.listCalendar(session['user']['id']).json()
+    #return render_template('calendar.html', calendar = response['items'])
+    return jsonify(response)
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback

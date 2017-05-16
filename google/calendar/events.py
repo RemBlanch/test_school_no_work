@@ -12,6 +12,7 @@ from __future__ import (
 
 import os
 import requests
+from google.globalParameters import calendar_URL
 
 from flask import (
     request,
@@ -30,7 +31,7 @@ def deleteEvent(credentials, calendarID, eventID, params):
     )
 
     response = google.delete(
-        event_URL + '/%s' % calendarID eventID,
+        event_URL + '/%s' % calendarID,
         params
     )
 
@@ -44,7 +45,7 @@ def getEvent(credentials, calendarID, eventID, params):
     )
 
     response = google.get(
-        event_URL + '/%s' % calendarID eventID,
+        event_URL + '/%s' % calendarID,
         params
     )
 
@@ -59,7 +60,7 @@ def importEvent(credentials, calendarID, params):
     )
 
     response = google.post(
-        event_URL + '/%s' % calendarID eventID,
+        event_URL + '/%s' % calendarID,
         params
     )
 
@@ -72,18 +73,13 @@ def insertEvent(credentials, calendarID, params):
 def instanceEvent():
     return NotImplemented
 
-def listEvents(app, calendarID):
+def listEvents(google, calendarID):
     """ Obtain list of calendar of a user """
-    google = OAuth2Session(
-        app.config['GOOGLE_CLIENT_ID'],
-        token=session['oauth_token']
-    )
 
     response = google.get(
-        calendar_URL['ACTION_URL'] +
-        calendar_URL['CALENDAR_EVENTS'] % calendarID
+        calendar_URL['ACTION_URL'] + '{}'.format(calendarID) +
+        calendar_URL['CALENDAR_EVENTS']
     )
-
     return response
 
 def moveEvent():

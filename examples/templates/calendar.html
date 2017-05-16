@@ -18,6 +18,17 @@
     .affix + .container-fluid {
       padding-top: 70px;
     }
+
+    .modal-header, h4, .close {
+      background-color: #6699ff;
+      color:white !important;
+      text-align: center;
+      font-size: 30px;
+    }
+
+    .modal-footer {
+      background-color: #f9f9f9;
+    }
   </style>
 </head>
 <body>
@@ -32,19 +43,54 @@
     </div>
     <div class="card-block text-muted">
       <dl class="card-text">
-        <dt>UID</dt>
-        <dd class="p-l-1">{{ calendar.id }}</dd>
-        <dt>etag</dt>
-        <dd class="p-l-1">{{ calendar.etag }}</dd>
-        <dt>timeZone</dt>
-        <dd class="p-l-1">{{ calendar.timeZone }}</dd>
-        <dt>User Role</dt>
-        <dd class="p-l-1">{{ calendar.accessRole }}</dd>
-        <a class="btn btn-info" name="myButton" onclick="window.location='/mCalendar/{{ calendar.id }}';">GET EVENTLIST</a>
+        <dt>UID: {{ calendar.id }}</dt>
+        <a class="btn btn-info" name="myButton" onclick="window.location='/mEvents/list/{{ calendar.id }}';">Get event list</a>
+        <!-- <a class="btn btn-success" name="myButton" onclick="window.location='/mEvents/create/{{ calendar.id }}';">Create Event</a> -->
+        <button type="button" class="btn btn-success" id="myBtn" data-id="{{ calendar.summary }}">Create Event</button>
+        <a class="btn btn-warning" name="myButton" onclick="window.location='/mEvents/update/{{ calendar.id }}';">Update Event</a>
+        <a class="btn btn-danger" name="myButton" onclick="window.location='/mEvents/delete/{{ calendar.id }}';">Delete Event</a>
       </dl>
     </div>
     {% endfor %}
   </div>
+
+  <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header" style="padding:35px 50px;">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4><span class="glyphicon glyphicons-calendar"></span>Create Event in
+            <input type="text" name="calendarID" va</h4>
+          </div>
+          <div class="modal-body" style="padding:40px 50px;">
+            <form role="form">
+              <div class="form-group">
+                <label for="title"><span class="glyphicon glyphicons-pencil"></span>  Event Title</label>
+                <input type="text" class="form-control" id="title" placeholder=" Event without title">
+              </div>
+              <div class="form-group">
+                <label for="description"><span class="glyphicon glyphicons-text-underline"></span> Description</label>
+                <input type="text" class="form-control" id="description" placeholder=" Enter text description">
+              </div>
+                <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicons-floppy-save"></span> Save</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+          </div>
+        </div>
+
+<script>
+$(document).ready(function(){
+    $("#myBtn").click(function(){
+        $("#calendarID").val($(this).data('id'));
+        $("#myModal").modal();
+    });
+});
+</script>
 </body>
 
 </html>
