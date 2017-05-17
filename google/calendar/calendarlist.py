@@ -15,12 +15,31 @@ from google.globalParameters import calendar_URL
 
 ################################# CALENDARLIST #################################
 
-def deleteCalendar(google, calendarID):
+def deleteCalendarList(google, calendarID):
     response = google.delete(
         calendar_URL['ACTION_URL'] + calendar_URL['CALENDAR_LIST']
             + '/{}'.format(calendarID)
     )
-    return NotImplemented
+    if response.status_code == 204:
+        print 'Calendar %s has been deleted properly.'.format(calendarID)
+        return True
+
+    else:
+        print 'Calendar {} deletion error.\n status_code {}.'.format(calendarID, response.status_code)
+    return False
+
+def getCalendarList(google, calendarID):
+    response = google.get(
+        calendar_URL['ACTION_URL'] + calendar_URL['CALENDAR_LIST']
+            + '/{}'.format(calendarID)
+    )
+
+    if response.status_code == 200:
+        print 'Calendar list retrieved'
+        return response
+    else:
+        print 'Calendar list error {}.'.format(response.status_code)
+    return False
 
 def listCalendar(google, params=None):
     """ Obtain user's calendar list. """
@@ -29,8 +48,40 @@ def listCalendar(google, params=None):
         params = params
     )
 
+    if response.status_code == 200:
+        print 'List of calendars were successfully retrieved.'
+        return response
+    else:
+        print 'List calendars retrieve error.\n status_code {}.'.format(response.status_code)
+    return False
+
+def insertCalendarList(google, params=None):
+    response = google.post(
+        calendar_URL['ACTION_URL'] + calendar_URL['CALENDAR_LIST'],
+        params = params
+    )
+
+    if response.status_code == 200:
+        print 'Insert calendar were successfully achieved.'
+        return response
+    else:
+        print 'Insert calendar error.\n status_code {}.'.format(response.status_code)
+    return False
+
+def watchCalendar(google, params = None):
+    """ Watch for changes to CalendarList resources. """
+    google.post(
+        calendar_URL['ACTION_URL'] + calendar_URL['CALENDAR_LIST'],
+        params = params
+    )
+
     return response
 
-def watchCalendar():
-    """ Watch for changes to CalendarList resources. """
-    return NotImplemented
+def updateCalendarList(google, calendarID, params = None):
+    google.put(
+        calendar_URL['ACTION_URL'] + calendar_URL['CALENDAR_LIST']
+            + '/{}'.format(calendarID),
+        params = params
+    )
+
+    return response
