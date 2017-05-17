@@ -5,113 +5,173 @@
 
 """
 
+import os
 from __future__ import (
   absolute_import,
   unicode_literals,
 )
-
-import os
-import requests
+from requests_oauthlib import OAuth2Session
 from google.globalParameters import calendar_URL
 
-from flask import (
-    request,
-    session,
-)
-
-from requests_oauthlib import OAuth2Session
-
-event_URL = 'https://www.googleapis.com/calendar/v3/calendars/%s/events',
-
-def deleteEvent(credentials, calendarID, eventID, params):
+def deleteEvent(google, calendarID, eventID, params = None):
     """ Deletes an event. """
-    google = OAuth2Session(
-        credentials['CLIENT_ID'],
-        token=session['oauth_token']
-    )
-
     response = google.delete(
-        event_URL + '/%s' % calendarID,
-        params
+        calendar_URL['ACTION_URL'] + '/{}'.format(calendarID)
+            + calendar_URL['EVENTS'] + '/{}'.format(eventID),
+        params = params
     )
 
-    return response
+    if response.status_code == 204:
+        print 'Event {} in calendar {} has been deleted properly.'.format(eventID, calendarID)
+        return True
+    else:
+        print 'Event {} in calendar {} delete error.\n status_code {}.'.format(eventID, calendarID, response.status_code)
+    return False
 
-def getEvent(credentials, calendarID, eventID, params):
+def getEvent(google, calendarID, eventID, params = None):
     """ Get information of a single event """
-    google = OAuth2Session(
-        credentials['CLIENT_ID'],
-        token=session['oauth_token']
-    )
-
     response = google.get(
-        event_URL + '/%s' % calendarID,
-        params
+        calendar_URL['ACTION_URL'] + '/{}'.format(calendarID)
+            + calendar_URL['EVENTS'] + '/{}'.format(eventID),
+        params = params
     )
+    if response.status_code == 200:
+        print 'Event {} in calendar {} has been retrieved properly.'.format(eventID, calendarID)
+        return response
+    else:
+        print 'Event {} in calendar {} retrieving error.\n status_code {}.'.format(eventID, calendarID, response.status_code)
+    return False
 
-    return response
-
-def importEvent(credentials, calendarID, params):
+def importEvent(google, calendarID, params = None):
     """ Imports an event. This operation is used to add a private copy of an
     existing event to a calendar. """
-    google = OAuth2Session(
-        credentials['CLIENT_ID'],
-        token=session['oauth_token']
-    )
 
     response = google.post(
-        event_URL + '/%s' % calendarID,
-        params
+        calendar_URL['ACTION_URL'] + '/{}'.format(calendarID)
+            + calendar_URL['EVENTS'] + '/{}'.format(eventID),
+        params = params
     )
 
-    return response
+    if response.status_code == 200:
+        print 'Event {} in calendar {} was successfully imported.'.format(eventID, calendarID)
+        return response
+    else:
+        print 'Event {} in calendar {} import error.\n status_code {}.'.format(eventID, calendarID, response.status_code)
+    return False
 
-def insertEvent(credentials, calendarID, params):
+def insertEvent(google, calendarID, params = None):
     """ Creates an event.  """
-    return NotImplemented
+    response = google.post(
+        calendar_URL['ACTION_URL'] + '/{}'.format(calendarID)
+            + calendar_URL['EVENTS'] + '/{}'.format(eventID),
+        params = params
+    )
 
-def instanceEvent():
-    return NotImplemented
+    if response.status_code == 200:
+        print 'Event {} in calendar {} was successfully inserted.'.format(eventID, calendarID)
+        return response
+    else:
+        print 'Event {} in calendar {} insert error.\n status_code {}.'.format(eventID, calendarID, response.status_code)
+    return False
 
-def listEvents(google, calendarID):
+def instanceEvent(google, calendarID, params = None):
+    response = google.get(
+        calendar_URL['ACTION_URL'] + '/{}'.format(calendarID)
+            + calendar_URL['EVENTS'] + '/{}'.format(eventID)
+            + calendar_URL['INSTANCE'],
+        params = params
+    )
+
+    if response.status_code == 200:
+        print 'Instance of event {} in calendar {} has been retrieved properly.'.format(eventID, calendarID)
+        return response
+    else:
+        print 'Instance of event {} in calendar {} retrieve error.\n status_code {}.'.format(eventID, calendarID, response.status_code)
+    return False
+
+def listEvents(google, calendarID, params = None):
     """ Obtain list of calendar of a user """
 
     response = google.get(
-        calendar_URL['ACTION_URL'] + '{}'.format(calendarID) +
-        calendar_URL['CALENDAR_EVENTS']
-    )
-    return response
-
-def moveEvent():
-    return NotImplemented
-
-def patchEvent():
-    return NotImplemented
-
-def quickAddEvent(app, calendarID, description):
-    google = OAuth2Session(
-        app.config['GOOGLE_CLIENT_ID'],
-        token=session['oauth_token']
+        calendar_URL['ACTION_URL'] + '{}'.format(calendarID)
+            + calendar_URL['CALENDAR_EVENTS'],
+        params = params
     )
 
+    if response.status_code == 200:
+        print 'List of event in calendar {} were successfully retrieved.'.format(calendarID)
+        return response
+    else:
+        print 'List of event in calendar {} retrie error.\n status_code {}.'.format(calendarID, response.status_code)
+    return False
+
+def moveEvent(google, calendarID, params = None):
+    response = google.post(
+        calendar_URL['ACTION_URL'] + '/{}'.format(calendarID)
+            + calendar_URL['EVENTS'] + '/{}'.format(eventID)
+            + '/move',
+        params = params
+    )
+
+    if response.status_code == 200:
+        print 'Event {} in calendar {} was successfully imported.'.format(eventID, calendarID)
+        return response
+    else:
+        print 'Event {} in calendar {} import error.\n status_code {}.'.format(eventID, calendarID, response.status_code)
+    return False
+
+def patchEvent(google, calendarID, params = None):
+    response = google.patch(
+        calendar_URL['ACTION_URL'] + '/{}'.format(calendarID)
+            + calendar_URL['EVENTS'] + '/{}'.format(eventID),
+        params = params
+    )
+
+    if response.status_code == 200:
+        print 'Event {} in calendar {} has been updated properly.'.format(eventID, calendarID)
+        return response
+    else:
+        print 'Event {} in calendar {} update error.\n status_code {}.'.format(eventID, calendarID, response.status_code)
+    return False
+
+def quickAddEvent(google, calendarID, params = None):
     response = google.get(
-        calendar_URL['ACTION_URL'] +
-        calendar_URL['CALENDAR_EVENTS'] +
-        '/quickAdd' % calendarID,
-        params={
-            'text': description
-        }
+        calendar_URL['ACTION_URL'] + '/{}'.format(calendarID)
+            + calendar_URL['CALENDAR_EVENTS'] + calendar_URL['QUICK_ADD']
+        params = params
     )
 
-    return response
+    if response.status_code == 200:
+        print 'Event {} in calendar {} has been added properly.'.format(eventID, calendarID)
+        return response
+    else:
+        print 'Event {} in calendar {} add error.\n status_code {}.'.format(eventID, calendarID, response.status_code)
+    return False
 
-def updateEvent():
-    google = OAuth2Session(
-        app.config['GOOGLE_CLIENT_ID'],
-        token=session['oauth_token']
+def updateEvent(google, calendarID, eventID, params = None):
+    response = google.put(
+        calendar_URL['ACTION_URL'] + '/{}'.format(calendarID)
+            + calendar_URL['EVENTS'] + '/{}'.format(eventID),
+        params = params
     )
 
-    return response
+    if response.status_code == 200:
+        print 'Event {} in calendar {} has been updated properly.'.format(eventID, calendarID)
+        return response
+    else:
+        print 'Event {} in calendar {} update error.\n status_code {}.'.format(eventID, calendarID, response.status_code)
+    return False
 
-def watchEvent():
-    return NotImplemented
+def watchEvent(google, calendarID, params = None):
+    response = google.post(
+        calendar_URL['ACTION_URL'] + '/{}'.format(calendarID)
+            + calendar_URL['EVENTS'] + calendar_URL['WATCH'],
+        params = params
+    )
+
+    if response.status_code == 200:
+        print 'Watch events in calendar {}.'.format(calendarID)
+        return response
+    else:
+        print 'Watch events in calendar {} error.\n status_code {}.'.format(calendarID, response.status_code)
+    return False

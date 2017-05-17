@@ -40,6 +40,11 @@ draft_URL = {
 }
 
 calendar_URL = {
-    'ACTION_URL': 'https://www.googleapis.com/calendar/v3/calendars/',
-    'CALENDAR_EVENTS': '/events'
+    'ACTION_URL': 'https://www.googleapis.com/calendar/v3/calendars',
+    'CALENDAR_LIST': '/users/me/calendarList',
+    'EVENTS': '/events',
+    'WATCH': '/watch',
+    'CLEAR': '/clear',
+    'DELETE': '/delete',
+    'QUICK_ADD': '/quickAdd'
 }
