@@ -22,7 +22,7 @@ def FreeBusy(google, resource):
 """ Returns free/busy information for a set of calendars. """
     response = google.post(
         'https://www.googleapis.com/calendar/v3/channels/stop',
-        params = resource
+        json = resource
     )
     if response.status_code == 200:
         print 'State of calendars retrieved'

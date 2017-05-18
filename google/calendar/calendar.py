@@ -4,17 +4,17 @@
     Google's CALENDAR API
 
 """
-
-import os
 from __future__ import (
   absolute_import,
   unicode_literals,
 )
+import os
+from numintec.calendar import Calendar
 from requests_oauthlib import OAuth2Session
 from google.globalParameters import calendar_URL
 
 ############################### GENERAL CALENDAR ###############################
-class gCalendar(object):
+class gCalendar(Calendar):
 
     def clearCalendar(google, calendarID):
         """ Clears a primary calendar. This operation deletes all events associated

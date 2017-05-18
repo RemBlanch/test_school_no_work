@@ -5,11 +5,11 @@
 
 """
 
-import os
 from __future__ import (
   absolute_import,
   unicode_literals,
 )
+import os
 from requests_oauthlib import OAuth2Session
 from google.globalParameters import calendar_URL
 
@@ -137,7 +137,7 @@ def patchEvent(google, calendarID, params = None):
 def quickAddEvent(google, calendarID, params = None):
     response = google.get(
         calendar_URL['ACTION_URL'] + '/{}'.format(calendarID)
-            + calendar_URL['CALENDAR_EVENTS'] + calendar_URL['QUICK_ADD']
+            + calendar_URL['CALENDAR_EVENTS'] + calendar_URL['QUICK_ADD'],
         params = params
     )
 
