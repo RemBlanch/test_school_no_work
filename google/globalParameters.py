@@ -48,3 +48,8 @@ calendar_URL = {
     'DELETE': '/delete',
     'QUICK_ADD': '/quickAdd'
 }
+
+acl_URL = {
+    'ACTION_URL': 'https://www.googleapis.com/calendar/v3/calendars/',
+    'ACL': '/acl'
+}

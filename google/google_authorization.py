@@ -136,6 +136,7 @@ class google_auth(token_authorization):
         return True
 
     def getSession(self, client_id, url_to_redirect, scope):
+        """ Generate user authorization session """
         return OAuth2Session(
             client_id,
             scope = scope,
