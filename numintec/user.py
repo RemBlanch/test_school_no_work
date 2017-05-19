@@ -8,3 +8,9 @@ class User():
 
     def setCalendar():
         return NotImplemented
+
+    def listCalendar():
+        return NotImplemented
+
+    def watchCalendars():
+        return NotImplemented

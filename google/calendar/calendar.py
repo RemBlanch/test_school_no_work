@@ -9,12 +9,13 @@ from __future__ import (
   unicode_literals,
 )
 import os
-from numintec.calendar import Calendar
+import sys
 from requests_oauthlib import OAuth2Session
 from google.globalParameters import calendar_URL
 
+
 ############################### GENERAL CALENDAR ###############################
-class gCalendar(Calendar):
+class gCalendar():
 
     def clearCalendar(google, calendarID):
         """ Clears a primary calendar. This operation deletes all events associated

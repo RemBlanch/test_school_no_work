@@ -25,7 +25,7 @@ try:
     )
 
 except ImportError:
-    raise RuntimeError('Requirements not set up, see 'Requirements':\n' + __doc__)
+    raise RuntimeError("Requirements not set up, see 'Requirements':\n" + __doc__)
 
 os.environ['GOOGLE_CLIENT_ID'] = '1087046004082-2q1diuuse89rt6ahu6mma050jqidmsdu.apps.googleusercontent.com'
 os.environ['GOOGLE_CLIENT_SECRET'] = '2k1nKdYteKu_yTJuvuduKvO-'
@@ -80,6 +80,7 @@ def menu():
         <li><a href='/listCalendar'>List Calendar</a></li>
         <li><a href='/listCalendarEvents'>List Events from Calendar</a></li>
         <li><a href='/checkState'>Am i free ?</a></li>
+        <li><a href='/watcher'>watch ?</a></li>
     </ul>
 
     <pre>
@@ -145,16 +146,16 @@ def freeBusy():
 def watcher():
 
     data = {
-        'id': '0123456789-9876543210',
+        'id': '01234567-89ab-cdef-0123456789ab',
         'type': 'web_hook',
-        'address': string,
+        'address': 'https://apps.numintec.com/notifications'
     }
 
     response = google.post(
         'https://www.googleapis.com/calendar/v3/users/me/calendarList/watch',
         json = data
     )
-    return response.json()
+    return jsonify(response.json())
 
 if __name__ == '__main__':
     # This allows us to use a plain HTTP callback
