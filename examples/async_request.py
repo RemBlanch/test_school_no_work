@@ -25,7 +25,7 @@ try:
 except ImportError:
     raise RuntimeError('Requirements not set up, see "Requirements":\n' + __doc__)
 
-os.environ['GOOGLE_CLIENT_ID'] = "1087046004082-2q1diuuse89rt6ahu6mma050jqidmsdu.apps.googleusercontent.com"
+os.environ['GOOGLE_CLIENT_ID'] = "2q1diuuse89rt6ahu6mma050jqidmsdu.apps.googleusercontent.com"
 os.environ['GOOGLE_CLIENT_SECRET'] = "2k1nKdYteKu_yTJuvuduKvO-"
 os.environ['SECRET_KEY'] = "CHECK_MATE"
 os.environ['DEBUG'] = '1'
